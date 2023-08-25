@@ -1,0 +1,115 @@
+{
+    "startingRoom": 1,
+    "rooms": [
+        {
+            "id": 1,
+            "description": "You are in a small room with white walls. A door leads to the east and another locked door to the north.",
+            "paths": {
+                "east": {
+                    "roomID": 2,
+                    "isLocked": false
+                },
+                "north": {
+                    "roomID": 3,
+                    "isLocked": true
+                }
+            },
+            "items": [
+                {
+                    "name": "key",
+                    "description": "A small rusty key."
+                },
+                {
+                    "name": "flashlight",
+                    "description": "A battery-operated flashlight."
+                }
+            ],
+            "characters": [
+                {
+                    "name": "John",
+                    "dialogue": "Hey there! Have you seen my key?",
+                    "interactions": [
+                        {
+                            "withItem": "flashlight",
+                            "action": "add_to_inventory",
+                            "message": "John notices your flashlight and remembers he left something behind the cabinet. He gives you a mysterious box.",
+                            "spawnItem": {
+                                "name": "mysterious box",
+                                "description": "A small box with intricate designs."
+                            }
+                        }
+                    ]
+                }
+            ],
+            "features": [
+                {
+                    "description": "A wooden cabinet.",
+                    "keywords": ["cabinet"],
+                    "interactions": [
+                        {
+                            "withItem": "flashlight",
+                            "action": "reveal",
+                            "message": "Using the flashlight, you find a hidden compartment in the cabinet. Inside, there's a golden key.",
+                            "spawnItem": {
+                                "name": "golden key",
+                                "description": "A shiny golden key, it looks special."
+                            }
+                        }
+                    ]
+                },
+                {
+                    "description": "A sturdy door leading north, it seems to be locked.",
+                    "keywords": ["north door", "door"],
+                    "interactions": [
+                        {
+                            "withItem": "golden key",
+                            "action": "unlock_path_north",
+                            "message": "Using the golden key, you unlock the door to the north."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "description": "You are in a large hall with marble flooring. A door leads to the west.",
+            "paths": {
+                "west": {
+                    "roomID": 1,
+                    "isLocked": false
+                }
+            },
+            "items": [
+                {
+                    "name": "book",
+                    "description": "A thick old book titled 'Adventures of Yore'."
+                }
+            ],
+            "features": [
+                {
+                    "description": "A grand painting of a landscape.",
+                    "keywords": ["painting", "landscape"],
+                    "interactions": [
+                        {
+                            "withItem": "key",
+                            "action": "none",
+                            "message": "You try the key on a hidden lock behind the painting, but nothing happens."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "description": "You've entered a mysterious chamber. The ambiance feels ancient and a hint of adventure lingers in the air.",
+            "paths": {
+                "south": {
+                    "roomID": 1,
+                    "isLocked": false
+                }
+            },
+            "items": [],
+            "features": []
+        }
+    ]
+}
