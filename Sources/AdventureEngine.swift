@@ -4,11 +4,8 @@ public class AdventureEngine {
   private var gameState: GameState
   private var commandParser: CommandParser
 
-  public init() {
-    func loadGameData() -> GameState {
-      guard let mapPath = Bundle.module.path(forResource: "map", ofType: "json") else {
-        fatalError("could not find map.json")
-      }
+  public init(mapPath: String? = nil) {
+    func loadGameData(mapPath: String) -> GameState {
       do {
         let data = try Data(contentsOf: URL(fileURLWithPath: mapPath))
         let gameData = try JSONDecoder().decode(GameData.self, from: data)
@@ -20,7 +17,12 @@ public class AdventureEngine {
       }
     }
 
-    self.gameState = loadGameData()
+    let actualMapPath = mapPath ?? Bundle.module.path(forResource: "map", ofType: "json")
+    guard let path = actualMapPath else {
+      fatalError("Could not find map.json")
+    }
+
+    self.gameState = loadGameData(mapPath: path)
     self.commandParser = CommandParser(gameState: gameState)
   }
 
