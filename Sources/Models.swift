@@ -11,6 +11,7 @@ struct Item: Codable {
 struct Character: Codable {
   var name: String
   var dialogue: String
+  var description: String
   var interactions: [Interaction]?
 }
 

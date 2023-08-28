@@ -28,6 +28,7 @@
                 {
                     "name": "John",
                     "dialogue": "Hey there! Have you seen my key?",
+                    "description" : "John is your old time friend, he's a bit of a scatterbrain.",
                     "interactions": [
                         {
                             "withItem": "flashlight",
@@ -43,7 +44,7 @@
             ],
             "features": [
                 {
-                    "description": "A wooden cabinet.",
+                    "description": "Resting against the room's stone-cold wall is a mysterious wooden cabinet.",
                     "keywords": ["cabinet"],
                     "interactions": [
                         {
@@ -87,7 +88,7 @@
             ],
             "features": [
                 {
-                    "description": "A grand painting of a landscape.",
+                    "description": "A grand painting of a landscape hangs on the wall.",
                     "keywords": ["painting", "landscape"],
                     "interactions": [
                         {

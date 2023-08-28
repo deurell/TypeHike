@@ -10,17 +10,21 @@ class GameState {
     self.playerInventory = playerInventory
   }
 
+  func getCurrentRoom() -> Room? {
+    return gameRooms[currentRoomID]
+  }
+
   func lookAround(in room: Room) -> String {
     var output: [String] = []
     output.append(room.description)
+    room.features?.forEach { feature in
+      output.append(feature.description)
+    }
     room.characters?.forEach { character in
       output.append("\(character.name) is here.")
     }
     room.items.forEach { item in
       output.append("There's a \(item.name) here.")
-    }
-    room.features?.forEach { feature in
-      output.append(feature.description)
     }
     output.append("You can go \(room.paths.keys.joined(separator: ", ")).")
     return output.joined(separator: "\n")

@@ -218,15 +218,46 @@ struct QuitCommand: Command {
 
 struct HelpCommand: Command {
   func execute(arguments: [String], gameState: GameState) -> String {
-    return "Available commands:\n" +
-      "look\n" +
-      "go <direction>\n" +
-      "use <item> [on <target>]\n" +
-      "inventory\n" +
-      "get <item>\n" +
-      "talk to <character>\n" +
-      "drop <item>\n" +
-      "quit\n" +
-      "help"
+    return "Available commands:\n" + "look\n" + "go <direction>\n" + "use <item> [on <target>]\n"
+      + "inventory\n" + "get <item>\n" + "talk to <character>\n" + "drop <item>\n"
+      + "examine <item>\n" + "quit\n"
+      + "help"
   }
-} 
+}
+
+struct ExamineCommand: Command {
+  func execute(arguments: [String], gameState: GameState) -> String {
+    if arguments.isEmpty {
+      return "What would you like to examine?"
+    }
+
+    let itemName = arguments.joined(separator: " ")
+
+    // 1. Check player's inventory
+    if let item = gameState.playerInventory.first(where: { $0.name == itemName }) {
+      return item.description
+    }
+
+    guard let room = gameState.getCurrentRoom() else {
+      return "Error: You seem to be in an unknown location!"
+    }
+
+    // 2. Check items in the room
+    if let item = room.items.first(where: { $0.name == itemName }) {
+      return item.description
+    }
+
+    // 3. Check features in the room using keywords
+    if let feature = room.features?.first(where: { $0.keywords.contains(itemName) }) {
+      return feature.description
+    }
+
+    // 4. Check characters in the room
+    if let character = room.characters?.first(where: { $0.name.caseInsensitiveEquals(itemName) }) {
+      return character.description
+    }
+
+    // 5. Return not found message
+    return "You can't find \(itemName) to examine."
+  }
+}

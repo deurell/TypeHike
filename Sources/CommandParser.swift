@@ -15,6 +15,7 @@ class CommandParser {
     "drop": DropCommand(),
     "quit": QuitCommand(),
     "help": HelpCommand(),
+    "examine": ExamineCommand(),
   ]
 
   private var commandAliases: [String: String] = [
