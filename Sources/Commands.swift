@@ -42,18 +42,19 @@ struct GoCommand: Command {
 struct UseCommand: Command {
 
   func execute(arguments: [String], gameState: GameState) -> String {
-    guard !arguments.isEmpty else {
+    let cleanedArguments = CommandUtilities.cleanArguments(arguments)
+    guard !cleanedArguments.isEmpty else {
       return "What would you like to use?"
     }
 
     // Determine if the "on" keyword is present in the arguments
-    if let onIndex = arguments.firstIndex(of: "on"), onIndex + 1 < arguments.count {
+    if let onIndex = cleanedArguments.firstIndex(of: "on"), onIndex + 1 < cleanedArguments.count {
       // Create the item name from all words before "on"
-      let itemName = arguments[..<onIndex].joined(separator: " ")
-      let targetName = arguments[(onIndex + 1)...].joined(separator: " ")
+      let itemName = cleanedArguments[..<onIndex].joined(separator: " ")
+      let targetName = cleanedArguments[(onIndex + 1)...].joined(separator: " ")
       return useItem(named: itemName, on: targetName, with: gameState)
     } else {
-      let itemName = arguments.joined(separator: " ")
+      let itemName = cleanedArguments.joined(separator: " ")
       return useItem(named: itemName, with: gameState)
     }
   }
@@ -144,8 +145,9 @@ struct InventoryCommand: Command {
 
 struct GetCommand: Command {
   func execute(arguments: [String], gameState: GameState) -> String {
-    if arguments.count > 0 {
-      let itemName = arguments.joined(separator: " ")
+    let cleanedArguments = CommandUtilities.cleanArguments(arguments)
+    if cleanedArguments.count > 0 {
+      let itemName = cleanedArguments.joined(separator: " ")
       return getItem(named: itemName, with: gameState)
     } else {
       return "What would you like to get?"
@@ -189,8 +191,9 @@ struct TalkCommand: Command {
 
 struct DropCommand: Command {
   func execute(arguments: [String], gameState: GameState) -> String {
-    if arguments.count > 0 {
-      let itemName = arguments.joined(separator: " ")
+    let cleanedArguments = CommandUtilities.cleanArguments(arguments)
+    if cleanedArguments.count > 0 {
+      let itemName = cleanedArguments.joined(separator: " ")
       return dropItem(named: itemName, with: gameState)
     } else {
       return "What would you like to drop?"
@@ -227,11 +230,12 @@ struct HelpCommand: Command {
 
 struct ExamineCommand: Command {
   func execute(arguments: [String], gameState: GameState) -> String {
-    if arguments.isEmpty {
+    let cleanedArguments = CommandUtilities.cleanArguments(arguments)
+    if cleanedArguments.isEmpty {
       return "What would you like to examine?"
     }
 
-    let itemName = arguments.joined(separator: " ")
+    let itemName = cleanedArguments.joined(separator: " ")
 
     // 1. Check player's inventory
     if let item = gameState.playerInventory.first(where: { $0.name == itemName }) {
