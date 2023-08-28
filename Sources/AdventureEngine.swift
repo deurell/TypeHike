@@ -43,4 +43,17 @@ public class AdventureEngine {
   private func printCurrentRoomDescription() -> String {
     return gameState.gameRooms[gameState.currentRoomID]?.description ?? ""
   }
+
+  public func getCurrentRoomView() -> RoomView {
+    guard let room = gameState.gameRooms[gameState.currentRoomID] else {
+      return RoomView(
+        description: "You are in a featureless void.", characters: nil, imageName: nil)
+    }
+
+    let charactersInRoom = room.characters?.map { $0.name }
+    let imageName = "\(room.id)"
+
+    return RoomView(
+      description: room.description, characters: charactersInRoom, imageName: imageName)
+  }
 }
