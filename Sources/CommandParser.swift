@@ -33,19 +33,18 @@ class CommandParser {
     "s": "go south",
     "e": "go east",
     "w": "go west",
+    "look at": "examine",
   ]
 
   private func resolveAlias(_ command: String) -> String {
     if let actualCommand = commandAliases[command] {
       return actualCommand
     }
-
     for (alias, actualCommand) in commandAliases {
       if command == alias || command.starts(with: "\(alias) ") {
         return actualCommand + command.dropFirst(alias.count)
       }
     }
-
     return command
   }
 

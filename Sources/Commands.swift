@@ -221,7 +221,7 @@ struct QuitCommand: Command {
 
 struct HelpCommand: Command {
   func execute(arguments: [String], gameState: GameState) -> String {
-    return "Available commands:\n" + "look\n" + "go <direction>\n" + "use <item> [on <target>]\n"
+    return "Available commands:\n" + "look [at <target>]\n" + "go <direction>\n" + "use <item> [on <target>]\n"
       + "inventory\n" + "get <item>\n" + "talk to <character>\n" + "drop <item>\n"
       + "examine <item>\n" + "quit\n"
       + "help"
