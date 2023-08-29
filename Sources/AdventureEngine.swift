@@ -37,7 +37,7 @@ public class AdventureEngine {
   }
 
   public func startGame() -> String {
-    return printCurrentRoomDescription()
+    return LookCommand().execute(arguments: [], gameState: gameState)
   }
 
   private func printCurrentRoomDescription() -> String {
