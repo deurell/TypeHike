@@ -40,10 +40,6 @@ public class AdventureEngine {
     return LookCommand().execute(arguments: [], gameState: gameState)
   }
 
-  private func printCurrentRoomDescription() -> String {
-    return gameState.gameRooms[gameState.currentRoomID]?.description ?? ""
-  }
-
   public func getCurrentRoomView() -> RoomView {
     guard let room = gameState.gameRooms[gameState.currentRoomID] else {
       return RoomView(
@@ -54,6 +50,12 @@ public class AdventureEngine {
     let imageName = "\(room.id)"
 
     return RoomView(
-      description: room.description, characters: charactersInRoom, imageName: imageName)
+      description: room.description,
+      characters: charactersInRoom,
+      imageName: imageName,
+      inventory: gameState.playerInventory.map { $0.name },
+      items: gameState.getCurrentRoom()?.items.map { $0.name } ?? [],
+      features: gameState.getCurrentRoom()?.features?.compactMap { $0.keywords.first } ?? []
+    )
   }
 }

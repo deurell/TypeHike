@@ -2,10 +2,19 @@ public struct RoomView {
   public let description: String
   public let characters: [String]?
   public let imageName: String?
+  public let inventory: [String]?
+  public let items: [String]?
+  public let features: [String]?
 
-  init(description: String, characters: [String]? = nil, imageName: String? = nil) {
+  init(
+    description: String, characters: [String]? = nil, imageName: String? = nil,
+    inventory: [String]? = nil, items: [String]? = nil, features: [String]? = nil
+  ) {
     self.description = description
     self.characters = characters
     self.imageName = imageName
+    self.inventory = inventory
+    self.items = items
+    self.features = features
   }
 }
