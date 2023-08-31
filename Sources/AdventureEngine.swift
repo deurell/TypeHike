@@ -40,16 +40,16 @@ public class AdventureEngine {
     return LookCommand().execute(arguments: [], gameState: gameState)
   }
 
-  public func getCurrentRoomView() -> RoomView {
+  public func getPlayerContext() -> PlayerContext {
     guard let room = gameState.gameRooms[gameState.currentRoomID] else {
-      return RoomView(
+      return PlayerContext(
         description: "You are in a featureless void.", characters: nil, imageName: nil)
     }
 
     let charactersInRoom = room.characters?.map { $0.name }
     let imageName = "\(room.id)"
 
-    return RoomView(
+    return PlayerContext(
       description: room.description,
       characters: charactersInRoom,
       imageName: imageName,

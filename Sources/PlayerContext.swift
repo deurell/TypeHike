@@ -1,4 +1,4 @@
-public struct RoomView {
+public struct PlayerContext {
   public let description: String
   public let characters: [String]?
   public let imageName: String?
