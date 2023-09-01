@@ -26,6 +26,7 @@ struct Interaction: Codable {
   var action: String
   var message: String
   var spawnItem: Item?
+  var hasExecuted: Bool? = false
 }
 
 struct Room: Codable {

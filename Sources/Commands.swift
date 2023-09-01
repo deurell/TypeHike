@@ -76,30 +76,38 @@ struct UseCommand: Command {
     return interactionResultMessage
   }
 
-  func handleInteraction(using item: Item, on target: String, with gameState: GameState)
-    -> String
-  {
-    // First, check if the target matches a character in the room
-    if let character = gameState.gameRooms[gameState.currentRoomID]?.characters?.first(where: {
-      $0.name.caseInsensitiveEquals(target)
-    }),
-      let interaction = character.interactions?.first(where: { $0.withItem == item.name })
+    func handleInteraction(using item: Item, on target: String, with gameState: GameState)
+        -> String
     {
-      return executeInteraction(interaction: interaction, with: gameState)
+        if let characterIndex = gameState.gameRooms[gameState.currentRoomID]?.characters?.firstIndex(where: {
+            $0.name.caseInsensitiveEquals(target)
+        }),
+        let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.characters?[characterIndex].interactions?.firstIndex(where: {
+            $0.withItem == item.name
+        }) {
+            if let interaction = gameState.gameRooms[gameState.currentRoomID]?.characters?[characterIndex].interactions?[interactionIndex], interaction.hasExecuted != true {
+                gameState.gameRooms[gameState.currentRoomID]?.characters?[characterIndex].interactions?[interactionIndex].hasExecuted = true
+                return executeInteraction(interaction: interaction, with: gameState)
+            }
+            return "You've already done that."
+        }
+
+        if let featureIndex = gameState.gameRooms[gameState.currentRoomID]?.features?.firstIndex(where: {
+            $0.keywords.contains(target)
+        }),
+        let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex].interactions?.firstIndex(where: {
+            $0.withItem == item.name
+        }) {
+            if let interaction = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex].interactions?[interactionIndex], interaction.hasExecuted != true {
+                gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex].interactions?[interactionIndex].hasExecuted = true
+                return executeInteraction(interaction: interaction, with: gameState)
+            }
+            return "You've already done that."
+        }
+
+        return "Your action had no effect."
     }
 
-    // If not, check if the target matches a feature in the room
-    if let feature = gameState.gameRooms[gameState.currentRoomID]?.features?.first(where: {
-      $0.keywords.contains(target)
-    }
-    ),
-      let interaction = feature.interactions?.first(where: { $0.withItem == item.name })
-    {
-      return executeInteraction(interaction: interaction, with: gameState)
-    }
-
-    return "Your action had no effect."
-  }
 
   func executeInteraction(interaction: Interaction, with gameState: GameState) -> String {
     switch interaction.action {
@@ -221,7 +229,8 @@ struct QuitCommand: Command {
 
 struct HelpCommand: Command {
   func execute(arguments: [String], gameState: GameState) -> String {
-    return "Available commands:\n" + "look [at <target>]\n" + "go <direction>\n" + "use <item> [on <target>]\n"
+    return "Available commands:\n" + "look [at <target>]\n" + "go <direction>\n"
+      + "use <item> [on <target>]\n"
       + "inventory\n" + "get <item>\n" + "talk to <character>\n" + "drop <item>\n"
       + "examine <item>\n" + "quit\n"
       + "help"

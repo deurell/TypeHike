@@ -52,7 +52,7 @@
                             "action": "reveal",
                             "message": "Using the flashlight, you find a hidden compartment in the cabinet. Inside, there's a golden key.",
                             "spawnItem": {
-                                "name": "golden key",
+                                "name": "Golden Key",
                                 "description": "A shiny golden key, it looks special."
                             }
                         }
