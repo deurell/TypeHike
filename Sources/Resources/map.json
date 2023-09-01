@@ -63,7 +63,7 @@
                     "keywords": ["north door", "door"],
                     "interactions": [
                         {
-                            "withItem": "golden key",
+                            "withItem": "Golden Key",
                             "action": "unlock_path_north",
                             "message": "Using the golden key, you unlock the door to the north."
                         }

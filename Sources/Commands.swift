@@ -76,38 +76,52 @@ struct UseCommand: Command {
     return interactionResultMessage
   }
 
-    func handleInteraction(using item: Item, on target: String, with gameState: GameState)
-        -> String
+  func handleInteraction(using item: Item, on target: String, with gameState: GameState)
+    -> String
+  {
+    if let characterIndex = gameState.gameRooms[gameState.currentRoomID]?.characters?.firstIndex(
+      where: {
+        $0.name.caseInsensitiveEquals(target)
+      }),
+      let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.characters?[
+        characterIndex
+      ].interactions?.firstIndex(where: {
+        $0.withItem.caseInsensitiveEquals(item.name)
+      })
     {
-        if let characterIndex = gameState.gameRooms[gameState.currentRoomID]?.characters?.firstIndex(where: {
-            $0.name.caseInsensitiveEquals(target)
-        }),
-        let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.characters?[characterIndex].interactions?.firstIndex(where: {
-            $0.withItem == item.name
-        }) {
-            if let interaction = gameState.gameRooms[gameState.currentRoomID]?.characters?[characterIndex].interactions?[interactionIndex], interaction.hasExecuted != true {
-                gameState.gameRooms[gameState.currentRoomID]?.characters?[characterIndex].interactions?[interactionIndex].hasExecuted = true
-                return executeInteraction(interaction: interaction, with: gameState)
-            }
-            return "You've already done that."
-        }
-
-        if let featureIndex = gameState.gameRooms[gameState.currentRoomID]?.features?.firstIndex(where: {
-            $0.keywords.contains(target)
-        }),
-        let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex].interactions?.firstIndex(where: {
-            $0.withItem == item.name
-        }) {
-            if let interaction = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex].interactions?[interactionIndex], interaction.hasExecuted != true {
-                gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex].interactions?[interactionIndex].hasExecuted = true
-                return executeInteraction(interaction: interaction, with: gameState)
-            }
-            return "You've already done that."
-        }
-
-        return "Your action had no effect."
+      if let interaction = gameState.gameRooms[gameState.currentRoomID]?.characters?[characterIndex]
+        .interactions?[interactionIndex], interaction.hasExecuted != true
+      {
+        gameState.gameRooms[gameState.currentRoomID]?.characters?[characterIndex].interactions?[
+          interactionIndex
+        ].hasExecuted = true
+        return executeInteraction(interaction: interaction, with: gameState)
+      }
+      return "You've already done that."
     }
 
+    if let featureIndex = gameState.gameRooms[gameState.currentRoomID]?.features?.firstIndex(
+      where: {
+        $0.keywords.contains(target)
+      }),
+      let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex]
+        .interactions?.firstIndex(where: {
+          $0.withItem.caseInsensitiveEquals(item.name)
+        })
+    {
+      if let interaction = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex]
+        .interactions?[interactionIndex], interaction.hasExecuted != true
+      {
+        gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex].interactions?[
+          interactionIndex
+        ].hasExecuted = true
+        return executeInteraction(interaction: interaction, with: gameState)
+      }
+      return "You've already done that."
+    }
+
+    return "Your action had no effect."
+  }
 
   func executeInteraction(interaction: Interaction, with gameState: GameState) -> String {
     switch interaction.action {
