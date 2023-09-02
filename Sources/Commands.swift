@@ -261,7 +261,9 @@ struct ExamineCommand: Command {
     let itemName = cleanedArguments.joined(separator: " ")
 
     // 1. Check player's inventory
-    if let item = gameState.playerInventory.first(where: { $0.name == itemName }) {
+    if let item: Item = gameState.playerInventory.first(where: {
+      $0.name.caseInsensitiveEquals(itemName)
+    }) {
       return item.description
     }
 
@@ -270,12 +272,14 @@ struct ExamineCommand: Command {
     }
 
     // 2. Check items in the room
-    if let item = room.items.first(where: { $0.name == itemName }) {
+    if let item = room.items.first(where: { $0.name.caseInsensitiveEquals(itemName) }) {
       return item.description
     }
 
     // 3. Check features in the room using keywords
-    if let feature = room.features?.first(where: { $0.keywords.contains(itemName) }) {
+    if let feature = room.features?.first(where: {
+      $0.keywords.contains(where: { $0.caseInsensitiveEquals(itemName) })
+    }) {
       return feature.description
     }
 
