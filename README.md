@@ -19,5 +19,5 @@ To integrate TypeHike into your project using SPM, add the package to your depen
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/deurell/TypeHike.git", from: "1.0.4")
+    .package(url: "https://github.com/deurell/TypeHike.git", from: "1.0.5")
 ]
