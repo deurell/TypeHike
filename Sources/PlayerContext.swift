@@ -5,10 +5,11 @@ public struct PlayerContext {
   public let inventory: [String]?
   public let items: [String]?
   public let features: [String]?
+  public let paths: [String]?
 
   init(
     description: String, characters: [String]? = nil, imageName: String? = nil,
-    inventory: [String]? = nil, items: [String]? = nil, features: [String]? = nil
+    inventory: [String]? = nil, items: [String]? = nil, features: [String]? = nil, paths: [String]? = nil
   ) {
     self.description = description
     self.characters = characters
@@ -16,5 +17,6 @@ public struct PlayerContext {
     self.inventory = inventory
     self.items = items
     self.features = features
+    self.paths = paths
   }
 }

@@ -55,7 +55,8 @@ public class AdventureEngine {
       imageName: imageName,
       inventory: gameState.playerInventory.map { $0.name },
       items: gameState.getCurrentRoom()?.items.map { $0.name } ?? [],
-      features: gameState.getCurrentRoom()?.features?.compactMap { $0.keywords.first } ?? []
+      features: gameState.getCurrentRoom()?.features?.compactMap { $0.keywords.first } ?? [],
+      paths: gameState.getCurrentRoom()?.paths.map { $0.key } ?? []
     )
   }
 }
