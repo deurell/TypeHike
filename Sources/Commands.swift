@@ -21,7 +21,9 @@ struct GoCommand: Command {
   }
 
   func go(_ direction: String, _ gameState: GameState) -> String {
-    if let path = gameState.gameRooms[gameState.currentRoomID]?.paths[direction] {
+    if let path = gameState.gameRooms[gameState.currentRoomID]?.paths[
+      direction.prefix(1).capitalized + direction.dropFirst()]
+    {
       if !path.isLocked {
         gameState.currentRoomID = path.roomID
         if let currentRoom = gameState.gameRooms[gameState.currentRoomID] {
@@ -102,7 +104,9 @@ struct UseCommand: Command {
 
     if let featureIndex = gameState.gameRooms[gameState.currentRoomID]?.features?.firstIndex(
       where: {
-        $0.keywords.contains(target)
+        $0.keywords.contains(where: { keyword in
+          keyword.caseInsensitiveEquals(target)
+        })
       }),
       let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex]
         .interactions?.firstIndex(where: {
