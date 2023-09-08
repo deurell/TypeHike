@@ -5,22 +5,22 @@
             "id": 1,
             "description": "You are in a small room with white walls. A door leads to the east and another locked door to the north.",
             "paths": {
-                "east": {
+                "East": {
                     "roomID": 2,
                     "isLocked": false
                 },
-                "north": {
+                "North": {
                     "roomID": 3,
                     "isLocked": true
                 }
             },
             "items": [
                 {
-                    "name": "key",
+                    "name": "Key",
                     "description": "A small rusty key."
                 },
                 {
-                    "name": "flashlight",
+                    "name": "Flashlight",
                     "description": "A battery-operated flashlight."
                 }
             ],
@@ -31,11 +31,11 @@
                     "description" : "John is your old time friend, he's a bit of a scatterbrain.",
                     "interactions": [
                         {
-                            "withItem": "flashlight",
+                            "withItem": "Flashlight",
                             "action": "add_to_inventory",
                             "message": "John notices your flashlight and remembers he left something behind the cabinet. He gives you a mysterious box.",
                             "spawnItem": {
-                                "name": "mysterious box",
+                                "name": "Mysterious Box",
                                 "description": "A small box with intricate designs."
                             }
                         }
@@ -45,10 +45,10 @@
             "features": [
                 {
                     "description": "Resting against the room's stone-cold wall is a mysterious wooden cabinet.",
-                    "keywords": ["cabinet"],
+                    "keywords": ["Cabinet"],
                     "interactions": [
                         {
-                            "withItem": "flashlight",
+                            "withItem": "Flashlight",
                             "action": "reveal",
                             "message": "Using the flashlight, you find a hidden compartment in the cabinet. Inside, there's a golden key.",
                             "spawnItem": {
@@ -60,7 +60,7 @@
                 },
                 {
                     "description": "A sturdy door leading north, it seems to be locked.",
-                    "keywords": ["north door", "door"],
+                    "keywords": ["North Door", "Door"],
                     "interactions": [
                         {
                             "withItem": "Golden Key",
@@ -75,24 +75,24 @@
             "id": 2,
             "description": "You are in a large hall with marble flooring. A door leads to the west.",
             "paths": {
-                "west": {
+                "West": {
                     "roomID": 1,
                     "isLocked": false
                 }
             },
             "items": [
                 {
-                    "name": "book",
+                    "name": "Book",
                     "description": "A thick old book titled 'Adventures of Yore'."
                 }
             ],
             "features": [
                 {
                     "description": "A grand painting of a landscape hangs on the wall.",
-                    "keywords": ["painting", "landscape"],
+                    "keywords": ["Painting", "Landscape"],
                     "interactions": [
                         {
-                            "withItem": "key",
+                            "withItem": "Key",
                             "action": "none",
                             "message": "You try the key on a hidden lock behind the painting, but nothing happens."
                         }
@@ -104,7 +104,7 @@
             "id": 3,
             "description": "You've entered a mysterious chamber. The ambiance feels ancient and a hint of adventure lingers in the air.",
             "paths": {
-                "south": {
+                "South": {
                     "roomID": 1,
                     "isLocked": false
                 }

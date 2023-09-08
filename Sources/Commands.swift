@@ -140,8 +140,8 @@ struct UseCommand: Command {
         gameState.playerInventory.append(item)
         return interaction.message
       }
-    case let str where str.starts(with: "unlock_path_"):
-      let pathName = interaction.action.replacingOccurrences(of: "unlock_path_", with: "")
+    case let str where str.lowercased().starts(with: "unlock_path_"):
+      let pathName = String(str.dropFirst(12)).capitalized
       gameState.gameRooms[gameState.currentRoomID]?.paths[pathName]?.isLocked = false
       return interaction.message
     default:
