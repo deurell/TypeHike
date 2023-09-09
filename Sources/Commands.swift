@@ -194,25 +194,30 @@ struct GetCommand: Command {
 
 }
 
-struct TalkCommand: Command {
-  func execute(arguments: [String], gameState: GameState) -> String {
-    if arguments.count >= 2 && arguments[0] == "to" {
-      let characterName = arguments.dropFirst().joined(separator: " ")
-      return talkToCharacter(named: characterName, with: gameState)
-    } else {
-      return "Who would you like to talk to?"
-    }
-  }
+import Foundation // Needed for arc4random_uniform()
 
-  func talkToCharacter(named characterName: String, with gameState: GameState) -> String {
-    if let character = gameState.gameRooms[gameState.currentRoomID]?.characters?.first(where: {
-      $0.name.caseInsensitiveEquals(characterName)
-    }) {
-      return "\(characterName.capitalized): \"\(character.dialogue)\""
-    } else {
-      return "\(characterName.capitalized) is not here."
+struct TalkCommand: Command {
+    func execute(arguments: [String], gameState: GameState) -> String {
+        if arguments.count >= 2 && arguments[0] == "to" {
+            let characterName = arguments.dropFirst().joined(separator: " ")
+            return talkToCharacter(named: characterName, with: gameState)
+        } else {
+            return "Who would you like to talk to?"
+        }
     }
-  }
+
+    func talkToCharacter(named characterName: String, with gameState: GameState) -> String {
+        if let character = gameState.gameRooms[gameState.currentRoomID]?.characters?.first(where: {
+            $0.name.caseInsensitiveEquals(characterName)
+        }) {
+            let dialogues = character.dialogue
+            let randomDialogue = dialogues?.randomElement() ?? "..."
+            
+            return "\(characterName.capitalized): \"\(randomDialogue)\""
+        } else {
+            return "\(characterName.capitalized) is not here."
+        }
+    }
 }
 
 struct DropCommand: Command {

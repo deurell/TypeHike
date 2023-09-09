@@ -3,63 +3,65 @@
     "rooms": [
         {
             "id": 1,
-            "description": "You are in a small room with white walls. A door leads to the east and another locked door to the north.",
+            "description": "You are in a small room with stone walls.",
             "paths": {
-                "East": {
-                    "roomID": 2,
-                    "isLocked": false
-                },
-                "North": {
-                    "roomID": 3,
-                    "isLocked": true
-                }
+                "East": { "roomID": 2, "isLocked": false },
+                "North": { "roomID": 3, "isLocked": true },
+                "Up": { "roomID": 4, "isLocked": false }
             },
             "items": [
-                {
-                    "name": "Key",
-                    "description": "A small rusty key."
-                },
-                {
-                    "name": "Flashlight",
-                    "description": "A battery-operated flashlight."
-                }
+                { "name": "Torch", "description": "A traditionally lit torch, essential for seeing in the dark." }
             ],
             "characters": [
                 {
-                    "name": "John",
-                    "dialogue": "Hey there! Have you seen my key?",
-                    "description" : "John is your old time friend, he's a bit of a scatterbrain.",
+                    "name": "Tristan",
+                    "dialogue": [
+                        "Hey there! I hid something precious inside a model of a tree, but for the life of me, I can't figure out how to retrieve it. If you can get it, it's yours!",
+                        "You remember that time we went on that adventure together? This feels just like that. Nostalgic, isn't it?",
+                        "You always were the clever one. I bet you'll figure out this tree model puzzle in no time!"
+                    ],
+                    "description": "Tristan is your old time friend, he's a bit of a scatterbrain.",
                     "interactions": [
                         {
-                            "withItem": "Flashlight",
-                            "action": "add_to_inventory",
-                            "message": "John notices your flashlight and remembers he left something behind the cabinet. He gives you a mysterious box.",
-                            "spawnItem": {
-                                "name": "Mysterious Box",
-                                "description": "A small box with intricate designs."
-                            }
+                            "withItem": "Torch",
+                            "action": "none",
+                            "message": "Perhaps there's another nook or cranny that this torch might illuminate better."
                         }
                     ]
                 }
             ],
             "features": [
                 {
-                    "description": "Resting against the room's stone-cold wall is a mysterious wooden cabinet.",
-                    "keywords": ["Cabinet"],
+                    "description": "A model tree rests on a table. Something's off about it, but I can't make it out.",
+                    "keywords": ["Tree", "Model Tree", "Hollow"],
                     "interactions": [
                         {
-                            "withItem": "Flashlight",
+                            "withItem": "Magnifying Glass",
                             "action": "reveal",
-                            "message": "Using the flashlight, you find a hidden compartment in the cabinet. Inside, there's a golden key.",
-                            "spawnItem": {
-                                "name": "Golden Key",
-                                "description": "A shiny golden key, it looks special."
-                            }
+                            "message": "You inspect the hollow of the tree model closely and find a hidden latch. Opening it, you discover the mysterious box.",
+                            "spawnItem": { "name": "Mysterious Box", "description": "A small box with intricate designs." }
+                        },
+                        {
+                            "withItem": "Enchanted Sword",
+                            "action": "none",
+                            "message": "You try tapping the model with the sword's hilt, but nothing happens. It's just a model tree after all."
                         }
                     ]
                 },
                 {
-                    "description": "A sturdy door leading north, it seems to be locked.",
+                    "description": "A cabinet stands against the wall, its contents hidden in the dim light. Some light might reveal more.",
+                    "keywords": ["Cabinet"],
+                    "interactions": [
+                        {
+                            "withItem": "Torch",
+                            "action": "reveal",
+                            "message": "Using the torch, you find a hidden compartment in the cabinet. Inside, there's a golden key.",
+                            "spawnItem": { "name": "Golden Key", "description": "A shiny golden key, it looks special." }
+                        }
+                    ]
+                },
+                {
+                    "description": "There's an inviting door to the east and another, heavier door to the north. A whispered rumor said it's locked for a reason.",
                     "keywords": ["North Door", "Door"],
                     "interactions": [
                         {
@@ -73,28 +75,22 @@
         },
         {
             "id": 2,
-            "description": "You are in a large hall with marble flooring. A door leads to the west.",
-            "paths": {
-                "West": {
-                    "roomID": 1,
-                    "isLocked": false
-                }
-            },
+            "description": "You enter a spacious hall. Light from tall windows paints patterns on the wooden floor. An ornate door lies to the west.",
+            "paths": { "West": { "roomID": 1, "isLocked": false } },
             "items": [
                 {
-                    "name": "Book",
-                    "description": "A thick old book titled 'Adventures of Yore'."
-                }
-            ],
+                    "name": "Magnifying Glass",
+                    "description": "A magnifying glass. It looks useful for examining things closely."
+                }],
             "features": [
                 {
-                    "description": "A grand painting of a landscape hangs on the wall.",
+                    "description": "A grand painting shows a landscape with mountains and rivers. Sunlight highlights a tree with a notable hollow.",
                     "keywords": ["Painting", "Landscape"],
                     "interactions": [
                         {
-                            "withItem": "Key",
+                            "withItem": "Torch",
                             "action": "none",
-                            "message": "You try the key on a hidden lock behind the painting, but nothing happens."
+                            "message": "You playfully shine the torch on the painting, making shadow puppets dance across the landscape. The mountains seem to enjoy the show!"
                         }
                     ]
                 }
@@ -104,13 +100,133 @@
             "id": 3,
             "description": "You've entered a mysterious chamber. The ambiance feels ancient and a hint of adventure lingers in the air.",
             "paths": {
-                "South": {
-                    "roomID": 1,
-                    "isLocked": false
+                "South": { "roomID": 1, "isLocked": false },
+                "North": { "roomID": 5, "isLocked": false }
+            },
+            "items": [ {
+                "name": "Key",
+                "description": "A small rusty key."
+            }],
+            "characters": [
+                {
+                    "name": "Miri",
+                    "dialogue": [
+                        "The future of our kingdom hinges on a mystical amulet and a legendary box said to harness its power. If you discover this box, please return it to me. We cannot falter now.",
+                        "This chamber has seen countless warriors and heroes. Yet, only a few have truly changed our fate. Are you one of them?",
+                        "Darkness grows by the day. Only the combined power of the amulet and the box can push it back."
+                    ],
+                    "description": "Miri's eyes are full of urgency. She's determined and seems to carry the weight of the entire kingdom on her shoulders.",
+                    "interactions": [
+                        {
+                            "withItem": "Mysterious Box",
+                            "action": "add_to_inventory",
+                            "message": "Miri looks at the box and then at you. 'For your bravery,' she says, giving you an awesome sword.",
+                            "spawnItem": { "name": "Enchanted Sword", "description": "A cool sword that glows with magic vibes." }
+                        },
+                        {
+                            "withItem": "Torch",
+                            "action": "none",
+                            "message": "She gives you a frustrated look. 'Really? Not the time for that!'"
+                        },
+                        {
+                            "withItem": "Enchanted Sword",
+                            "action": "none",
+                            "message": "With a raised eyebrow, she warns, 'Be wary where you point that blade, or you may find it turned against you by powers you can't fathom.'"
+                        },
+                        {
+                            "withItem": "Ancient Amulet",
+                            "action": "none",
+                            "message": "She gasps as she sees the amulet. 'This... this is a piece of our history! Where did you find it?' she wonders aloud, her eyes shining with recognition."
+                        }
+                    ]
                 }
+            ],
+            "features": [
+                {
+                    "name": "Dark Force Seal",
+                    "description": "A ritual circle in the center of the room, where the power of the amulet can be used.",
+                    "keywords": ["Seal", "Circle", "Ritual"],
+                    "interactions": [
+                        {
+                            "withItem": "Ancient Amulet",
+                            "action": "end_game",
+                            "message": "Raising the amulet, it radiates powerful energy. Light fills the chamber, banishing the shadows. The kingdom is safe.\nCongratulations on completing this tutorial adventure of TypeHike. Remember, this is merely the beginning. We're continuously rolling out exciting updates and fresh quests. Stay tuned! Thank you for being part of this adventure, and much \u2665 from the team at Deurell Labs."
+                        },
+                        {
+                            "withItem": "Enchanted Sword",
+                            "action": "none",
+                            "message": "Drawing the sword, you feel its magic pulse. But here, it's not the answer."
+                        }
+                    ]
+                }
+                
+            ]
+        },
+        {
+            "id": 4,
+            "description": "The attic, heavy with memories of the past, is a maze of dusty, cobweb-draped relics. Faint whispers echo, their source elusive. Moonlight through a cracked window paints dancing shadows on the floorboards.",
+            "paths": { "Down": { "roomID": 1, "isLocked": false } },
+            "items": [],
+            "characters": [
+                {
+                    "name": "Evelyn",
+                    "dialogue": [
+                        "Oh! It's been ages since I've seen another soul up here. I once read tales from an ancient tome, but it was taken from me. If you find it, could you give it back? In return, I might have something you'd find useful.",
+                        "The attic carries memories of centuries. Some joyful, others sorrowful. Every corner has a story.",
+                        "You seem different from the others who've ventured here. There's a spark in your eyes, an echo of adventures past."
+                    ],
+                    "description": "Evelyn looks out of place, as if she's from another time. Her translucent figure and ethereal glow suggest she's not of this world.",
+                    "interactions": [
+                        {
+                            "withItem": "Book",
+                            "action": "add_to_inventory",
+                            "message": "You hand over the book to Evelyn. Her face lights up, and in gratitude, she gives you an ancient amulet.",
+                            "spawnItem": { "name": "Ancient Amulet", "description": "A beautifully crafted amulet with a gem that glows in the dark." }
+                        },
+                        {
+                            "withItem": "Enchanted Sword",
+                            "action": "none",
+                            "message": "Evelyn's eyes fixate on the blade, a nostalgic sadness enveloping her. 'Such power... but against me, it's merely a relic of the past.'"
+                        }
+                    ]
+                }
+            ],
+            "features": [
+                {
+                    "description": "An old grandfather clock stands silent in the corner, its hands frozen at midnight. The pendulum seems stuck.",
+                    "keywords": ["Clock", "Grandfather Clock"],
+                    "interactions": [
+                        {
+                            "withItem": "Key",
+                            "action": "reveal",
+                            "message": "You use the key to wind up the clock. As it starts ticking, a hidden drawer pops open, revealing a small, tattered note.",
+                            "spawnItem": { "name": "Tattered Note", "description": "A worn-out note with faded handwriting, it reads: 'Evelyn, protect the amulet at all costs.'" }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "description": "In the Guardian's Chamber, air thick with ancient magic surrounds a stone statue watching your every move. Behind it, on a marble pedestal, lies the desired book.",
+            "paths": {
+                "South": { "roomID": 3, "isLocked": false }
             },
             "items": [],
-            "features": []
+            "features": [
+                {
+                    "description": "The massive stone guardian stands with its stone sword raised, poised to strike. It appears to be the protector of the ancient tome.",
+                    "keywords": ["Guardian", "Statue", "Stone Guardian"],
+                    "interactions": [
+                        {
+                            "withItem": "Enchanted Sword",
+                            "action": "reveal",
+                            "message": "Wielding the Enchanted Sword, you challenge the stone guardian. A fierce battle ensues, with the magical properties of the sword proving decisive. After what feels like an eternity, the guardian crumbles to dust, revealing a clear path to the ancient tome.",
+                            "spawnItem": { "name": "Book", "description": "An ancient tome titled 'Adventures of Yore', its pages whispering tales from epochs long past." }
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
