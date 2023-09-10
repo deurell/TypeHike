@@ -121,7 +121,13 @@
                             "withItem": "Mysterious Box",
                             "action": "add_to_inventory",
                             "message": "Miri looks at the box and then at you. 'For your bravery,' she says, giving you an awesome sword.",
-                            "spawnItem": { "name": "Enchanted Sword", "description": "A cool sword that glows with magic vibes." }
+                            "spawnItem": { "name": "Enchanted Sword", "description": "A cool sword that glows with magic vibes." },
+                            "postInteraction": [
+                                {
+                                    "action": "remove_item",
+                                    "item": "Mysterious Box"
+                                }
+                            ]
                         },
                         {
                             "withItem": "Torch",

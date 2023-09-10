@@ -1,3 +1,5 @@
+import Foundation  // Needed for arc4random_uniform()
+
 protocol Command {
   func execute(arguments: [String], gameState: GameState) -> String
 }
@@ -133,21 +135,37 @@ struct UseCommand: Command {
       if let item = interaction.spawnItem {
         // Add the revealed item to the player's inventory or to the room
         gameState.gameRooms[gameState.currentRoomID]?.items.append(item)
-        return interaction.message
       }
     case "add_to_inventory":
       if let item = interaction.spawnItem {
         gameState.playerInventory.append(item)
-        return interaction.message
       }
     case let str where str.lowercased().starts(with: "unlock_path_"):
       let pathName = String(str.dropFirst(12)).capitalized
       gameState.gameRooms[gameState.currentRoomID]?.paths[pathName]?.isLocked = false
-      return interaction.message
     default:
-      return interaction.message
+      break
     }
-    return "Nothing happened."
+
+    // Handle postInteraction if it exists
+    if let postInteractions = interaction.postInteraction {
+      for postAction in postInteractions {
+        switch postAction.action {
+        case "remove_item":
+          if let index = gameState.playerInventory.firstIndex(where: {
+            $0.name.caseInsensitiveEquals(postAction.item)
+          }) {
+            gameState.playerInventory.remove(at: index)
+          }
+        // Add more cases as you introduce more postInteraction actions
+        default:
+          break
+        }
+      }
+    }
+
+    // Return the original message after processing postInteraction
+    return interaction.message
   }
 
 }
@@ -194,30 +212,28 @@ struct GetCommand: Command {
 
 }
 
-import Foundation // Needed for arc4random_uniform()
-
 struct TalkCommand: Command {
-    func execute(arguments: [String], gameState: GameState) -> String {
-        if arguments.count >= 2 && arguments[0] == "to" {
-            let characterName = arguments.dropFirst().joined(separator: " ")
-            return talkToCharacter(named: characterName, with: gameState)
-        } else {
-            return "Who would you like to talk to?"
-        }
+  func execute(arguments: [String], gameState: GameState) -> String {
+    if arguments.count >= 2 && arguments[0] == "to" {
+      let characterName = arguments.dropFirst().joined(separator: " ")
+      return talkToCharacter(named: characterName, with: gameState)
+    } else {
+      return "Who would you like to talk to?"
     }
+  }
 
-    func talkToCharacter(named characterName: String, with gameState: GameState) -> String {
-        if let character = gameState.gameRooms[gameState.currentRoomID]?.characters?.first(where: {
-            $0.name.caseInsensitiveEquals(characterName)
-        }) {
-            let dialogues = character.dialogue
-            let randomDialogue = dialogues?.randomElement() ?? "..."
-            
-            return "\(characterName.capitalized): \"\(randomDialogue)\""
-        } else {
-            return "\(characterName.capitalized) is not here."
-        }
+  func talkToCharacter(named characterName: String, with gameState: GameState) -> String {
+    if let character = gameState.gameRooms[gameState.currentRoomID]?.characters?.first(where: {
+      $0.name.caseInsensitiveEquals(characterName)
+    }) {
+      let dialogues = character.dialogue
+      let randomDialogue = dialogues?.randomElement() ?? "..."
+
+      return "\(characterName.capitalized): \"\(randomDialogue)\""
+    } else {
+      return "\(characterName.capitalized) is not here."
     }
+  }
 }
 
 struct DropCommand: Command {

@@ -21,12 +21,18 @@ struct Feature: Codable {
   var interactions: [Interaction]?
 }
 
+struct PostAction: Codable {
+    var action: String
+    var item: String
+}
+
 struct Interaction: Codable {
-  var withItem: String
-  var action: String
-  var message: String
-  var spawnItem: Item?
-  var hasExecuted: Bool? = false
+    var withItem: String
+    var action: String
+    var message: String
+    var spawnItem: Item?
+    var hasExecuted: Bool? = false
+    var postInteraction: [PostAction]?
 }
 
 struct Room: Codable {
