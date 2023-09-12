@@ -1,7 +1,8 @@
-class GameState {
+class GameState: Codable {
   var currentRoomID: Int
   var gameRooms: [Int: Room]
   var playerInventory: [Item]
+  var isGameCompleted: Bool = false
 
   // Initializer for your class
   init(currentRoomID: Int, gameRooms: [Int: Room], playerInventory: [Item]) {

@@ -3,7 +3,6 @@ import Foundation
 public class AdventureEngine {
   private var gameState: GameState
   private var commandParser: CommandParser
-
   public init(mapPath: String? = nil) {
     func loadGameData(mapPath: String) -> GameState {
       do {
@@ -56,7 +55,36 @@ public class AdventureEngine {
       inventory: gameState.playerInventory.map { $0.name },
       items: gameState.getCurrentRoom()?.items.map { $0.name } ?? [],
       features: gameState.getCurrentRoom()?.features?.compactMap { $0.keywords.first } ?? [],
-      paths: gameState.getCurrentRoom()?.paths.map { $0.key } ?? []
+      paths: gameState.getCurrentRoom()?.paths.map { $0.key } ?? [],
+      isGameCompleted: gameState.isGameCompleted
     )
   }
+
+    public func serializeCurrentState() -> String? {
+        let encoder = JSONEncoder()
+        do {
+            let data = try encoder.encode(gameState)
+            return String(data: data, encoding: .utf8)
+        } catch {
+            print("Failed to serialize current state: \(error)")
+            return nil
+        }
+    }
+    
+    public func deserializeState(from jsonString: String) -> Bool {
+        guard let data = jsonString.data(using: .utf8) else {
+            print("Failed to convert string to data")
+            return false
+        }
+        
+        let decoder = JSONDecoder()
+        do {
+            gameState = try decoder.decode(GameState.self, from: data)
+            return true
+        } catch {
+            print("Failed to deserialize state: \(error)")
+            return false
+        }
+    }
+
 }

@@ -158,6 +158,8 @@ struct UseCommand: Command {
             gameState.playerInventory.remove(at: index)
           }
         // Add more cases as you introduce more postInteraction actions
+        case "game_complete":
+          gameState.isGameCompleted = true
         default:
           break
         }

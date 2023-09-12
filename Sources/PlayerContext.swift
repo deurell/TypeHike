@@ -6,10 +6,11 @@ public struct PlayerContext {
   public let items: [String]?
   public let features: [String]?
   public let paths: [String]?
+  public let isGameCompleted: Bool
 
   init(
     description: String, characters: [String]? = nil, imageName: String? = nil,
-    inventory: [String]? = nil, items: [String]? = nil, features: [String]? = nil, paths: [String]? = nil
+    inventory: [String]? = nil, items: [String]? = nil, features: [String]? = nil, paths: [String]? = nil, isGameCompleted: Bool = false
   ) {
     self.description = description
     self.characters = characters
@@ -18,5 +19,6 @@ public struct PlayerContext {
     self.items = items
     self.features = features
     self.paths = paths
+    self.isGameCompleted = isGameCompleted
   }
 }
