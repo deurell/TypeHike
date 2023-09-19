@@ -6,6 +6,10 @@ struct Path: Codable {
 struct Item: Codable {
   var name: String
   var description: String
+  var interactions: [Interaction]?
+  func canInteract(with item: String) -> Bool {
+     return interactions?.contains(where: { $0.withItem.caseInsensitiveEquals(item) }) ?? false
+  }
 }
 
 struct Character: Codable {
@@ -33,6 +37,7 @@ struct Interaction: Codable {
     var spawnItem: Item?
     var hasExecuted: Bool? = false
     var postInteraction: [PostAction]?
+    var isRepeatable: Bool? = false
 }
 
 struct Room: Codable {

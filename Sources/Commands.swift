@@ -51,19 +51,24 @@ struct UseCommand: Command {
       return "What would you like to use?"
     }
 
-    // Determine if the "on" keyword is present in the arguments
     if let onIndex = cleanedArguments.firstIndex(of: "on"), onIndex + 1 < cleanedArguments.count {
-      // Create the item name from all words before "on"
       let itemName = cleanedArguments[..<onIndex].joined(separator: " ")
       let targetName = cleanedArguments[(onIndex + 1)...].joined(separator: " ")
       return useItem(named: itemName, on: targetName, with: gameState)
     } else {
-      let itemName = cleanedArguments.joined(separator: " ")
-      return useItem(named: itemName, with: gameState)
+      let objectName = cleanedArguments.joined(separator: " ")
+      // Check if the object is a feature in the current room
+      if let _ = gameState.gameRooms[gameState.currentRoomID]?.features?.first(where: {
+        $0.keywords.contains(where: { keyword in keyword.caseInsensitiveEquals(objectName) })
+      }) {
+        return useFeature(named: objectName, with: gameState)
+      } else {
+        return useItem(named: objectName, on: "self", with: gameState)
+      }
     }
   }
 
-  func useItem(named itemName: String, on target: String = "self", with gameState: GameState)
+  func useItem(named itemName: String, on target: String, with gameState: GameState)
     -> String
   {
     if !gameState.hasItem(named: itemName) {
@@ -80,54 +85,79 @@ struct UseCommand: Command {
     return interactionResultMessage
   }
 
-  func handleInteraction(using item: Item, on target: String, with gameState: GameState)
-    -> String
-  {
-    if let characterIndex = gameState.gameRooms[gameState.currentRoomID]?.characters?.firstIndex(
-      where: {
-        $0.name.caseInsensitiveEquals(target)
-      }),
-      let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.characters?[
-        characterIndex
-      ].interactions?.firstIndex(where: {
-        $0.withItem.caseInsensitiveEquals(item.name)
-      })
-    {
-      if let interaction = gameState.gameRooms[gameState.currentRoomID]?.characters?[characterIndex]
-        .interactions?[interactionIndex], interaction.hasExecuted != true
-      {
-        gameState.gameRooms[gameState.currentRoomID]?.characters?[characterIndex].interactions?[
-          interactionIndex
-        ].hasExecuted = true
-        return executeInteraction(interaction: interaction, with: gameState)
-      }
-      return "You've already done that."
-    }
+  // Step 3: Add a useFeature function
+  func useFeature(named featureName: String, with gameState: GameState) -> String {
+    return handleInteraction(using: nil, on: featureName, with: gameState)
+  }
 
-    if let featureIndex = gameState.gameRooms[gameState.currentRoomID]?.features?.firstIndex(
-      where: {
-        $0.keywords.contains(where: { keyword in
-          keyword.caseInsensitiveEquals(target)
-        })
-      }),
-      let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex]
-        .interactions?.firstIndex(where: {
-          $0.withItem.caseInsensitiveEquals(item.name)
-        })
-    {
-      if let interaction = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex]
-        .interactions?[interactionIndex], interaction.hasExecuted != true
-      {
-        gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex].interactions?[
-          interactionIndex
-        ].hasExecuted = true
-        return executeInteraction(interaction: interaction, with: gameState)
-      }
-      return "You've already done that."
+  func handleInteraction(using item: Item?, on target: String, with gameState: GameState) -> String {
+    if var item = item {
+        
+        // Check for interactions using an item on another item in inventory
+        if gameState.hasItem(named: target) {
+            if let targetItem = gameState.playerInventory.first(where: { $0.name.caseInsensitiveEquals(target) }),
+               let interactionIndex = item.interactions?.firstIndex(where: { $0.withItem.caseInsensitiveEquals(targetItem.name) }) {
+                
+                if let interaction = item.interactions?[interactionIndex], interaction.hasExecuted != true || interaction.isRepeatable ?? false {
+                    item.interactions?[interactionIndex].hasExecuted = true
+                    return executeInteraction(interaction: interaction, with: gameState)
+                }
+                return "You've already done that."
+            }
+        }
+        
+        // Handle interactions involving an item and a character
+        if let characterIndex = gameState.gameRooms[gameState.currentRoomID]?.characters?.firstIndex(
+            where: { $0.name.caseInsensitiveEquals(target) }),
+           let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.characters?[characterIndex]
+            .interactions?.firstIndex(where: { $0.withItem.caseInsensitiveEquals(item.name) }) {
+            
+            if let interaction = gameState.gameRooms[gameState.currentRoomID]?.characters?[characterIndex]
+                .interactions?[interactionIndex], interaction.hasExecuted != true || interaction.isRepeatable ?? false {
+                gameState.gameRooms[gameState.currentRoomID]?.characters?[characterIndex].interactions?[interactionIndex]
+                    .hasExecuted = true
+                return executeInteraction(interaction: interaction, with: gameState)
+            }
+            return "You've already done that."
+        }
+
+        // Handle interactions involving an item and a feature
+        if let featureIndex = gameState.gameRooms[gameState.currentRoomID]?.features?.firstIndex(
+            where: { $0.keywords.contains(where: { keyword in keyword.caseInsensitiveEquals(target) }) }),
+           let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex]
+            .interactions?.firstIndex(where: { $0.withItem.caseInsensitiveEquals(item.name) }) {
+            
+            if let interaction = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex]
+                .interactions?[interactionIndex], interaction.hasExecuted != true || interaction.isRepeatable ?? false {
+                gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex].interactions?[interactionIndex]
+                    .hasExecuted = true
+                return executeInteraction(interaction: interaction, with: gameState)
+            }
+            return "You've already done that."
+        }
+
+    } else {
+        // Handle interactions involving only a feature (no item)
+        if let featureIndex = gameState.gameRooms[gameState.currentRoomID]?.features?.firstIndex(
+            where: { $0.keywords.contains(where: { keyword in keyword.caseInsensitiveEquals(target) }) }),
+           let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex]
+            .interactions?.firstIndex(where: {
+                $0.withItem == "" || $0.withItem.caseInsensitiveEquals("none")
+            }) {
+            
+            if let interaction = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex]
+                .interactions?[interactionIndex], interaction.hasExecuted != true {
+                gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex].interactions?[interactionIndex]
+                    .hasExecuted = true
+                return executeInteraction(interaction: interaction, with: gameState)
+            }
+            return "You've already done that."
+        }
     }
 
     return "Your action had no effect."
-  }
+}
+
 
   func executeInteraction(interaction: Interaction, with gameState: GameState) -> String {
     switch interaction.action {
@@ -143,6 +173,11 @@ struct UseCommand: Command {
     case let str where str.lowercased().starts(with: "unlock_path_"):
       let pathName = String(str.dropFirst(12)).capitalized
       gameState.gameRooms[gameState.currentRoomID]?.paths[pathName]?.isLocked = false
+   case let str where str.lowercased().starts(with: "move_"):
+    if let roomID = Int(String(str.dropFirst(5))) {
+        gameState.currentRoomID = roomID
+            return "\(interaction.message)\n \(gameState.lookAround(in: gameState.getCurrentRoom()!))"
+    }
     default:
       break
     }

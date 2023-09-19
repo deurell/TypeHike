@@ -156,7 +156,13 @@
                         {
                             "withItem": "Ancient Amulet",
                             "action": "end_game",
-                            "message": "Raising the amulet, it radiates powerful energy. Light fills the chamber, banishing the shadows. The kingdom is safe.\nCongratulations on completing this tutorial adventure of TypeHike. Remember, this is merely the beginning. We're continuously rolling out exciting updates and fresh quests. Stay tuned! Thank you for being part of this adventure, and much \u2665 from the team at Deurell Labs."
+                            "message": "Raising the amulet, it radiates powerful energy. Light fills the chamber, banishing the shadows. The kingdom is safe.\nCongratulations on completing this tutorial adventure of TypeHike. Remember, this is merely the beginning. We're continuously rolling out exciting updates and fresh quests. Stay tuned! Thank you for being part of this adventure, and much \u2665 from the team at Deurell Labs.",
+                            "postInteraction": [
+                                {
+                                    "action": "game_complete",
+                                    "item": "game"
+                                }
+                            ]
                         },
                         {
                             "withItem": "Enchanted Sword",
@@ -187,7 +193,13 @@
                             "withItem": "Book",
                             "action": "add_to_inventory",
                             "message": "You hand over the book to Evelyn. Her face lights up, and in gratitude, she gives you an ancient amulet.",
-                            "spawnItem": { "name": "Ancient Amulet", "description": "A beautifully crafted amulet with a gem that glows in the dark." }
+                            "spawnItem": { "name": "Ancient Amulet", "description": "A beautifully crafted amulet with a gem that glows in the dark." },
+                            "postInteraction": [
+                                {
+                                    "action": "remove_item",
+                                    "item": "Book"
+                                }
+                            ]
                         },
                         {
                             "withItem": "Enchanted Sword",
