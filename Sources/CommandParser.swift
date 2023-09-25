@@ -9,9 +9,9 @@ class CommandParser {
     "titta": LookCommand(),
     "gå": GoCommand(),
     "använd": UseCommand(),
-    "utrusting": InventoryCommand(),
+    "ryggsäck": InventoryCommand(),
     "ta": GetCommand(),
-    "prata": TalkCommand(),
+    "tala": TalkCommand(),
     "släpp": DropCommand(),
     "sluta": QuitCommand(),
     "hjälp": HelpCommand(),
@@ -20,7 +20,7 @@ class CommandParser {
 
   private var commandAliases: [String: String] = [
     "ta upp": "ta",
-    "u": "utrustning",
+    "u": "ryggsäck",
     "nord": "gå nord",
     "söder": "gå söder",
     "öster": "gå öster",

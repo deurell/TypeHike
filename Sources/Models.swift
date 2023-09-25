@@ -5,6 +5,7 @@ struct Path: Codable {
 
 struct Item: Codable {
   var name: String
+  var neutrum: Bool?
   var description: String
   var interactions: [Interaction]?
   func canInteract(with item: String) -> Bool {

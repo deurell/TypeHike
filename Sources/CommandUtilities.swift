@@ -4,4 +4,12 @@ struct CommandUtilities {
       !$0.caseInsensitiveEquals("the")
     }
   }
+
+  static func enEtt(_ item: Item) -> String {
+    if item.neutrum ?? false {
+      return "ett"
+    } else {
+      return "en"
+    }
+  }
 }

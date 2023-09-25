@@ -25,7 +25,7 @@ class GameState: Codable {
       output.append("\(character.name) är här.")
     }
     room.items.forEach { item in
-      output.append("Din finns en \(item.name) här.")
+      output.append("Din finns \(CommandUtilities.enEtt(item)) \(item.name) här.")
     }
     output.append("Du kan gå \(room.paths.keys.joined(separator: ", ")).")
     return output.joined(separator: "\n")

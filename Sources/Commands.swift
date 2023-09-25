@@ -29,7 +29,7 @@ struct GoCommand: Command {
       if !path.isLocked {
         gameState.currentRoomID = path.roomID
         if let currentRoom = gameState.gameRooms[gameState.currentRoomID] {
-          let moveString = "You move \(direction)."
+          let moveString = "Du går \(direction)."
           return moveString + "\n" + gameState.lookAround(in: currentRoom)
         } else {
           return "Det finns inget rum åt det hållet."
@@ -51,7 +51,7 @@ struct UseCommand: Command {
       return "Vad vill du använda?"
     }
 
-    if let onIndex = cleanedArguments.firstIndex(of: "on"), onIndex + 1 < cleanedArguments.count {
+    if let onIndex = cleanedArguments.firstIndex(of: "på"), onIndex + 1 < cleanedArguments.count {
       let itemName = cleanedArguments[..<onIndex].joined(separator: " ")
       let targetName = cleanedArguments[(onIndex + 1)...].joined(separator: " ")
       return useItem(named: itemName, on: targetName, with: gameState)
@@ -72,7 +72,7 @@ struct UseCommand: Command {
     -> String
   {
     if !gameState.hasItem(named: itemName) {
-      return "Du har inte \(itemName) i din utrustning."
+      return "Du har inte \(itemName) i din ryggsäck."
     }
 
     guard
@@ -214,10 +214,10 @@ struct InventoryCommand: Command {
 
   func showInventory(_ gameState: GameState) -> String {
     if gameState.playerInventory.isEmpty {
-      return "Your inventory is empty."
+      return "Du har ingenting i ryggsäcken."
     } else {
       var message: [String] = []
-      message.append("You have:")
+      message.append("I ryggsäcken har du:")
       gameState.playerInventory.forEach { message.append("- \($0.name): \($0.description)") }
       return message.joined(separator: "\n")
     }
@@ -241,17 +241,16 @@ struct GetCommand: Command {
     }) {
       if let item = gameState.gameRooms[gameState.currentRoomID]?.items.remove(at: index) {
         gameState.playerInventory.append(item)
-        return "You picked up the \(itemName)."
+        return "Du plockar upp \(CommandUtilities.enEtt(item)) \(itemName)."
       }
     }
     return "Det finns ingen \(itemName) att plocka upp."
   }
-
 }
 
 struct TalkCommand: Command {
   func execute(arguments: [String], gameState: GameState) -> String {
-    if arguments.count >= 2 && arguments[0] == "to" {
+    if arguments.count >= 2 && arguments[0] == "med" {
       let characterName = arguments.dropFirst().joined(separator: " ")
       return talkToCharacter(named: characterName, with: gameState)
     } else {
@@ -290,9 +289,9 @@ struct DropCommand: Command {
     }) {
       let item = gameState.playerInventory.remove(at: index)
       gameState.gameRooms[gameState.currentRoomID]?.items.append(item)
-      return "Du släppte \(itemName)."
+      return "Du släpper \(CommandUtilities.enEtt(item)) \(itemName)."
     } else {
-      return "Du har ingen \(itemName) i din utrusting."
+      return "Du har ingen \(itemName) i din ryggsäck."
     }
   }
 }
