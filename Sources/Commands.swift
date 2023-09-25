@@ -9,7 +9,7 @@ struct LookCommand: Command {
     if let currentRoom = gameState.gameRooms[gameState.currentRoomID] {
       return gameState.lookAround(in: currentRoom)
     }
-    return "You seem to be nowhere, something must be wrong."
+    return "Det verkar som att du är ingenstans, något måste vara fel."
   }
 }
 
@@ -18,7 +18,7 @@ struct GoCommand: Command {
     if arguments.count > 0 {
       return go(arguments[0], gameState)
     } else {
-      return "Where would you like to go?"
+      return "Vart vill du gå?"
     }
   }
 
@@ -32,13 +32,13 @@ struct GoCommand: Command {
           let moveString = "You move \(direction)."
           return moveString + "\n" + gameState.lookAround(in: currentRoom)
         } else {
-          return "There's no room in that direction."
+          return "Det finns inget rum åt det hållet."
         }
       } else {
-        return "The path to the \(direction) is locked."
+        return "Vägen åt \(direction) är låst."
       }
     } else {
-      return "You can't go in that direction."
+      return "Du kan inte gå åt det hållet."
     }
   }
 }
@@ -48,7 +48,7 @@ struct UseCommand: Command {
   func execute(arguments: [String], gameState: GameState) -> String {
     let cleanedArguments = CommandUtilities.cleanArguments(arguments)
     guard !cleanedArguments.isEmpty else {
-      return "What would you like to use?"
+      return "Vad vill du använda?"
     }
 
     if let onIndex = cleanedArguments.firstIndex(of: "on"), onIndex + 1 < cleanedArguments.count {
@@ -72,7 +72,7 @@ struct UseCommand: Command {
     -> String
   {
     if !gameState.hasItem(named: itemName) {
-      return "You don't have a \(itemName) in your inventory."
+      return "Du har inte \(itemName) i din utrustning."
     }
 
     guard
@@ -102,7 +102,7 @@ struct UseCommand: Command {
                     item.interactions?[interactionIndex].hasExecuted = true
                     return executeInteraction(interaction: interaction, with: gameState)
                 }
-                return "You've already done that."
+                return "Du har redan gjort det."
             }
         }
         
@@ -118,7 +118,7 @@ struct UseCommand: Command {
                     .hasExecuted = true
                 return executeInteraction(interaction: interaction, with: gameState)
             }
-            return "You've already done that."
+            return "Du har redan gjort det."
         }
 
         // Handle interactions involving an item and a feature
@@ -133,7 +133,7 @@ struct UseCommand: Command {
                     .hasExecuted = true
                 return executeInteraction(interaction: interaction, with: gameState)
             }
-            return "You've already done that."
+            return "Du har redan gjort det."
         }
 
     } else {
@@ -151,11 +151,11 @@ struct UseCommand: Command {
                     .hasExecuted = true
                 return executeInteraction(interaction: interaction, with: gameState)
             }
-            return "You've already done that."
+            return "Du har redan gjort det."
         }
     }
 
-    return "Your action had no effect."
+    return "Du gjorde ett försök men ingenting hände."
 }
 
 
@@ -231,7 +231,7 @@ struct GetCommand: Command {
       let itemName = cleanedArguments.joined(separator: " ")
       return getItem(named: itemName, with: gameState)
     } else {
-      return "What would you like to get?"
+      return "Vad är det du vill plocka upp?"
     }
   }
 
@@ -244,7 +244,7 @@ struct GetCommand: Command {
         return "You picked up the \(itemName)."
       }
     }
-    return "There's no \(itemName) here to pick up."
+    return "Det finns ingen \(itemName) att plocka upp."
   }
 
 }
@@ -255,7 +255,7 @@ struct TalkCommand: Command {
       let characterName = arguments.dropFirst().joined(separator: " ")
       return talkToCharacter(named: characterName, with: gameState)
     } else {
-      return "Who would you like to talk to?"
+      return "Vem vill du prata med?"
     }
   }
 
@@ -268,7 +268,7 @@ struct TalkCommand: Command {
 
       return "\(characterName.capitalized): \"\(randomDialogue)\""
     } else {
-      return "\(characterName.capitalized) is not here."
+      return "\(characterName.capitalized) är inte här."
     }
   }
 }
@@ -280,7 +280,7 @@ struct DropCommand: Command {
       let itemName = cleanedArguments.joined(separator: " ")
       return dropItem(named: itemName, with: gameState)
     } else {
-      return "What would you like to drop?"
+      return "Vad vill du lägga ner?"
     }
   }
 
@@ -290,16 +290,16 @@ struct DropCommand: Command {
     }) {
       let item = gameState.playerInventory.remove(at: index)
       gameState.gameRooms[gameState.currentRoomID]?.items.append(item)
-      return "You dropped the \(itemName)."
+      return "Du släppte \(itemName)."
     } else {
-      return "You don't have a \(itemName) in your inventory."
+      return "Du har ingen \(itemName) i din utrusting."
     }
   }
 }
 
 struct QuitCommand: Command {
   func execute(arguments: [String], gameState: GameState) -> String {
-    return "So long, and thanks for playing!"
+    return "Hej då, och tack för att du spelade!"
   }
 }
 
@@ -317,7 +317,7 @@ struct ExamineCommand: Command {
   func execute(arguments: [String], gameState: GameState) -> String {
     let cleanedArguments = CommandUtilities.cleanArguments(arguments)
     if cleanedArguments.isEmpty {
-      return "What would you like to examine?"
+      return "Vad vill du undersöka?"
     }
 
     let itemName = cleanedArguments.joined(separator: " ")
@@ -351,6 +351,6 @@ struct ExamineCommand: Command {
     }
 
     // 5. Return not found message
-    return "You can't find \(itemName) to examine."
+    return "Du hittar ingen \(itemName) att undersöka."
   }
 }

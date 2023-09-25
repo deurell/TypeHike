@@ -29,7 +29,7 @@ public class AdventureEngine {
     let (parsedCommand, arguments) = commandParser.parse(input: input)
 
     guard let command = parsedCommand else {
-      return "I don't understand that command."
+      return "Jag förstår inte det kommandot."
     }
 
     return command.execute(arguments: arguments, gameState: gameState)
@@ -42,7 +42,7 @@ public class AdventureEngine {
   public func getPlayerContext() -> PlayerContext {
     guard let room = gameState.gameRooms[gameState.currentRoomID] else {
       return PlayerContext(
-        description: "You are in a featureless void.", characters: nil, imageName: nil)
+        description: "Du befinner dig i ett tomrum.", characters: nil, imageName: nil)
     }
 
     let charactersInRoom = room.characters?.map { $0.name }

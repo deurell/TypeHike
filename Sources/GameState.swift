@@ -22,12 +22,12 @@ class GameState: Codable {
       output.append(feature.description)
     }
     room.characters?.forEach { character in
-      output.append("\(character.name) is here.")
+      output.append("\(character.name) är här.")
     }
     room.items.forEach { item in
-      output.append("There's a \(item.name) here.")
+      output.append("Din finns en \(item.name) här.")
     }
-    output.append("You can go \(room.paths.keys.joined(separator: ", ")).")
+    output.append("Du kan gå \(room.paths.keys.joined(separator: ", ")).")
     return output.joined(separator: "\n")
   }
 
