@@ -352,7 +352,7 @@ struct ExamineCommand: Command {
     if let item: Item = gameState.playerInventory.first(where: {
       $0.name.caseInsensitiveEquals(itemName)
     }) {
-      return item.description
+      return item.detailedDescription ?? item.description
     }
 
     guard let room = gameState.getCurrentRoom() else {
@@ -361,63 +361,22 @@ struct ExamineCommand: Command {
 
     // 2. Check items in the room
     if let item = room.items.first(where: { $0.name.caseInsensitiveEquals(itemName) }) {
-      return item.description
+      return item.detailedDescription ?? item.description
     }
 
     // 3. Check features in the room using keywords
     if let feature = room.features?.first(where: {
       $0.keywords.contains(where: { $0.caseInsensitiveEquals(itemName) })
     }) {
-      return feature.description
+      return feature.detailedDescription ?? feature.description
     }
 
     // 4. Check characters in the room
-    if let character = room.characters?.first(where: { $0.name.caseInsensitiveEquals(itemName) }) {
-      return character.description
+    if let character = room.characters?.first(where: { $0.name.caseInsensitiveEquals(itemName) }
+    ) {
+      return character.detailedDescription ?? character.description
     }
 
-    struct ExamineCommand: Command {
-      func execute(arguments: [String], gameState: GameState) -> String {
-        let cleanedArguments = CommandUtilities.cleanArguments(arguments)
-        if cleanedArguments.isEmpty {
-          return "Vad vill du undersöka?"
-        }
-
-        let itemName = cleanedArguments.joined(separator: " ")
-
-        // 1. Check player's inventory
-        if let item: Item = gameState.playerInventory.first(where: {
-          $0.name.caseInsensitiveEquals(itemName)
-        }) {
-          return item.detailedDescription ?? item.description
-        }
-
-        guard let room = gameState.getCurrentRoom() else {
-          return "Error: You seem to be in an unknown location!"
-        }
-
-        // 2. Check items in the room
-        if let item = room.items.first(where: { $0.name.caseInsensitiveEquals(itemName) }) {
-          return item.detailedDescription ?? item.description
-        }
-
-        // 3. Check features in the room using keywords
-        if let feature = room.features?.first(where: {
-          $0.keywords.contains(where: { $0.caseInsensitiveEquals(itemName) })
-        }) {
-          return feature.detailedDescription ?? feature.description
-        }
-
-        // 4. Check characters in the room
-        if let character = room.characters?.first(where: { $0.name.caseInsensitiveEquals(itemName) }
-        ) {
-          return character.detailedDescription ?? character.description
-        }
-
-        // 5. Return not found message
-        return "Du hittar ingen \(itemName) att undersöka."
-      }
-    }
     // 5. Return not found message
     return "Du hittar ingen \(itemName) att undersöka."
   }
