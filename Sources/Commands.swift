@@ -90,74 +90,101 @@ struct UseCommand: Command {
     return handleInteraction(using: nil, on: featureName, with: gameState)
   }
 
-  func handleInteraction(using item: Item?, on target: String, with gameState: GameState) -> String {
+  func handleInteraction(using item: Item?, on target: String, with gameState: GameState) -> String
+  {
     if var item = item {
-        
-        // Check for interactions using an item on another item in inventory
-        if gameState.hasItem(named: target) {
-            if let targetItem = gameState.playerInventory.first(where: { $0.name.caseInsensitiveEquals(target) }),
-               let interactionIndex = item.interactions?.firstIndex(where: { $0.withItem.caseInsensitiveEquals(targetItem.name) }) {
-                
-                if let interaction = item.interactions?[interactionIndex], interaction.hasExecuted != true || interaction.isRepeatable ?? false {
-                    item.interactions?[interactionIndex].hasExecuted = true
-                    return executeInteraction(interaction: interaction, with: gameState)
-                }
-                return "Du har redan gjort det."
-            }
-        }
-        
-        // Handle interactions involving an item and a character
-        if let characterIndex = gameState.gameRooms[gameState.currentRoomID]?.characters?.firstIndex(
-            where: { $0.name.caseInsensitiveEquals(target) }),
-           let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.characters?[characterIndex]
-            .interactions?.firstIndex(where: { $0.withItem.caseInsensitiveEquals(item.name) }) {
-            
-            if let interaction = gameState.gameRooms[gameState.currentRoomID]?.characters?[characterIndex]
-                .interactions?[interactionIndex], interaction.hasExecuted != true || interaction.isRepeatable ?? false {
-                gameState.gameRooms[gameState.currentRoomID]?.characters?[characterIndex].interactions?[interactionIndex]
-                    .hasExecuted = true
-                return executeInteraction(interaction: interaction, with: gameState)
-            }
-            return "Du har redan gjort det."
-        }
 
-        // Handle interactions involving an item and a feature
-        if let featureIndex = gameState.gameRooms[gameState.currentRoomID]?.features?.firstIndex(
-            where: { $0.keywords.contains(where: { keyword in keyword.caseInsensitiveEquals(target) }) }),
-           let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex]
-            .interactions?.firstIndex(where: { $0.withItem.caseInsensitiveEquals(item.name) }) {
-            
-            if let interaction = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex]
-                .interactions?[interactionIndex], interaction.hasExecuted != true || interaction.isRepeatable ?? false {
-                gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex].interactions?[interactionIndex]
-                    .hasExecuted = true
-                return executeInteraction(interaction: interaction, with: gameState)
-            }
-            return "Du har redan gjort det."
+      // Check for interactions using an item on another item in inventory
+      if gameState.hasItem(named: target) {
+        if let targetItem = gameState.playerInventory.first(where: {
+          $0.name.caseInsensitiveEquals(target)
+        }),
+          let interactionIndex = item.interactions?.firstIndex(where: {
+            $0.withItem.caseInsensitiveEquals(targetItem.name)
+          })
+        {
+
+          if let interaction = item.interactions?[interactionIndex],
+            interaction.hasExecuted != true || interaction.isRepeatable ?? false
+          {
+            item.interactions?[interactionIndex].hasExecuted = true
+            return executeInteraction(interaction: interaction, with: gameState)
+          }
+          return "Du har redan gjort det."
         }
+      }
+
+      // Handle interactions involving an item and a character
+      if let characterIndex = gameState.gameRooms[gameState.currentRoomID]?.characters?.firstIndex(
+        where: { $0.name.caseInsensitiveEquals(target) }),
+        let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.characters?[
+          characterIndex
+        ]
+        .interactions?.firstIndex(where: { $0.withItem.caseInsensitiveEquals(item.name) })
+      {
+
+        if let interaction = gameState.gameRooms[gameState.currentRoomID]?.characters?[
+          characterIndex
+        ]
+        .interactions?[interactionIndex],
+          interaction.hasExecuted != true || interaction.isRepeatable ?? false
+        {
+          gameState.gameRooms[gameState.currentRoomID]?.characters?[characterIndex].interactions?[
+            interactionIndex
+          ]
+          .hasExecuted = true
+          return executeInteraction(interaction: interaction, with: gameState)
+        }
+        return "Du har redan gjort det."
+      }
+
+      // Handle interactions involving an item and a feature
+      if let featureIndex = gameState.gameRooms[gameState.currentRoomID]?.features?.firstIndex(
+        where: { $0.keywords.contains(where: { keyword in keyword.caseInsensitiveEquals(target) }) }
+      ),
+        let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex]
+          .interactions?.firstIndex(where: { $0.withItem.caseInsensitiveEquals(item.name) })
+      {
+
+        if let interaction = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex]
+          .interactions?[interactionIndex],
+          interaction.hasExecuted != true || interaction.isRepeatable ?? false
+        {
+          gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex].interactions?[
+            interactionIndex
+          ]
+          .hasExecuted = true
+          return executeInteraction(interaction: interaction, with: gameState)
+        }
+        return "Du har redan gjort det."
+      }
 
     } else {
-        // Handle interactions involving only a feature (no item)
-        if let featureIndex = gameState.gameRooms[gameState.currentRoomID]?.features?.firstIndex(
-            where: { $0.keywords.contains(where: { keyword in keyword.caseInsensitiveEquals(target) }) }),
-           let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex]
-            .interactions?.firstIndex(where: {
-                $0.withItem == "" || $0.withItem.caseInsensitiveEquals("none")
-            }) {
-            
-            if let interaction = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex]
-                .interactions?[interactionIndex], interaction.hasExecuted != true {
-                gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex].interactions?[interactionIndex]
-                    .hasExecuted = true
-                return executeInteraction(interaction: interaction, with: gameState)
-            }
-            return "Du har redan gjort det."
+      // Handle interactions involving only a feature (no item)
+      if let featureIndex = gameState.gameRooms[gameState.currentRoomID]?.features?.firstIndex(
+        where: { $0.keywords.contains(where: { keyword in keyword.caseInsensitiveEquals(target) }) }
+      ),
+        let interactionIndex = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex]
+          .interactions?.firstIndex(where: {
+            $0.withItem == "" || $0.withItem.caseInsensitiveEquals("none")
+          })
+      {
+
+        if let interaction = gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex]
+          .interactions?[interactionIndex], interaction.hasExecuted != true
+        {
+          gameState.gameRooms[gameState.currentRoomID]?.features?[featureIndex].interactions?[
+            interactionIndex
+          ]
+          .hasExecuted = true
+          return executeInteraction(interaction: interaction, with: gameState)
         }
+        return "Du har redan gjort det."
+      }
     }
 
     return "Du gjorde ett försök men ingenting hände."
-}
-
+  }
 
   func executeInteraction(interaction: Interaction, with gameState: GameState) -> String {
     switch interaction.action {
@@ -173,11 +200,11 @@ struct UseCommand: Command {
     case let str where str.lowercased().starts(with: "unlock_path_"):
       let pathName = String(str.dropFirst(12)).capitalized
       gameState.gameRooms[gameState.currentRoomID]?.paths[pathName]?.isLocked = false
-   case let str where str.lowercased().starts(with: "move_"):
-    if let roomID = Int(String(str.dropFirst(5))) {
+    case let str where str.lowercased().starts(with: "move_"):
+      if let roomID = Int(String(str.dropFirst(5))) {
         gameState.currentRoomID = roomID
-            return "\(interaction.message)\n \(gameState.lookAround(in: gameState.getCurrentRoom()!))"
-    }
+        return "\(interaction.message)\n \(gameState.lookAround(in: gameState.getCurrentRoom()!))"
+      }
     default:
       break
     }
@@ -349,6 +376,48 @@ struct ExamineCommand: Command {
       return character.description
     }
 
+    struct ExamineCommand: Command {
+      func execute(arguments: [String], gameState: GameState) -> String {
+        let cleanedArguments = CommandUtilities.cleanArguments(arguments)
+        if cleanedArguments.isEmpty {
+          return "Vad vill du undersöka?"
+        }
+
+        let itemName = cleanedArguments.joined(separator: " ")
+
+        // 1. Check player's inventory
+        if let item: Item = gameState.playerInventory.first(where: {
+          $0.name.caseInsensitiveEquals(itemName)
+        }) {
+          return item.detailedDescription ?? item.description
+        }
+
+        guard let room = gameState.getCurrentRoom() else {
+          return "Error: You seem to be in an unknown location!"
+        }
+
+        // 2. Check items in the room
+        if let item = room.items.first(where: { $0.name.caseInsensitiveEquals(itemName) }) {
+          return item.detailedDescription ?? item.description
+        }
+
+        // 3. Check features in the room using keywords
+        if let feature = room.features?.first(where: {
+          $0.keywords.contains(where: { $0.caseInsensitiveEquals(itemName) })
+        }) {
+          return feature.detailedDescription ?? feature.description
+        }
+
+        // 4. Check characters in the room
+        if let character = room.characters?.first(where: { $0.name.caseInsensitiveEquals(itemName) }
+        ) {
+          return character.detailedDescription ?? character.description
+        }
+
+        // 5. Return not found message
+        return "Du hittar ingen \(itemName) att undersöka."
+      }
+    }
     // 5. Return not found message
     return "Du hittar ingen \(itemName) att undersöka."
   }

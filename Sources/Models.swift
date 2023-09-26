@@ -7,9 +7,11 @@ struct Item: Codable {
   var name: String
   var neutrum: Bool?
   var description: String
+  var detailedDescription: String?
   var interactions: [Interaction]?
+
   func canInteract(with item: String) -> Bool {
-     return interactions?.contains(where: { $0.withItem.caseInsensitiveEquals(item) }) ?? false
+    return interactions?.contains(where: { $0.withItem.caseInsensitiveEquals(item) }) ?? false
   }
 }
 
@@ -17,28 +19,30 @@ struct Character: Codable {
   var name: String
   var dialogue: [String]?
   var description: String
+  var detailedDescription: String?
   var interactions: [Interaction]?
 }
 
 struct Feature: Codable {
   var description: String
+  var detailedDescription: String?
   var keywords: [String]
   var interactions: [Interaction]?
 }
 
 struct PostAction: Codable {
-    var action: String
-    var item: String
+  var action: String
+  var item: String
 }
 
 struct Interaction: Codable {
-    var withItem: String
-    var action: String
-    var message: String
-    var spawnItem: Item?
-    var hasExecuted: Bool? = false
-    var postInteraction: [PostAction]?
-    var isRepeatable: Bool? = false
+  var withItem: String
+  var action: String
+  var message: String
+  var spawnItem: Item?
+  var hasExecuted: Bool? = false
+  var postInteraction: [PostAction]?
+  var isRepeatable: Bool? = false
 }
 
 struct Room: Codable {
