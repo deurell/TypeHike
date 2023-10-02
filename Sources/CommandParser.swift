@@ -31,17 +31,27 @@ class CommandParser {
     "s": "gå söder",
     "ö": "gå öster",
     "v": "gå väster",
-    "look at": "examine",
+    "ge": "använd",
   ]
 
   private func resolveAlias(_ command: String) -> String {
-    if let actualCommand = commandAliases[command] {
+    let transformedCommand = handleGiveCommand(command: command)
+    let lowercasedCommand = transformedCommand.lowercased()
+
+    if let actualCommand = commandAliases[lowercasedCommand] {
       return actualCommand
     }
     for (alias, actualCommand) in commandAliases {
-      if command == alias || command.starts(with: "\(alias) ") {
-        return actualCommand + command.dropFirst(alias.count)
+      if lowercasedCommand == alias || lowercasedCommand.starts(with: "\(alias) ") {
+        return actualCommand + transformedCommand.dropFirst(alias.count)
       }
+    }
+    return transformedCommand
+  }
+
+  private func handleGiveCommand(command: String) -> String {
+    if command.lowercased().starts(with: "ge ") && command.contains(" till ") {
+      return command.replacingOccurrences(of: " till ", with: " på ")
     }
     return command
   }
