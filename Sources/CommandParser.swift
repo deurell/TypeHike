@@ -34,19 +34,31 @@ class CommandParser {
     "e": "go east",
     "w": "go west",
     "look at": "examine",
+    "give": "use",
   ]
 
-  private func resolveAlias(_ command: String) -> String {
-    if let actualCommand = commandAliases[command] {
+    private func resolveAlias(_ command: String) -> String {
+    let transformedCommand = handleGiveCommand(command: command)
+    let lowercasedCommand = transformedCommand.lowercased()
+
+    if let actualCommand = commandAliases[lowercasedCommand] {
       return actualCommand
     }
     for (alias, actualCommand) in commandAliases {
-      if command == alias || command.starts(with: "\(alias) ") {
-        return actualCommand + command.dropFirst(alias.count)
+      if lowercasedCommand == alias || lowercasedCommand.starts(with: "\(alias) ") {
+        return actualCommand + transformedCommand.dropFirst(alias.count)
       }
+    }
+    return transformedCommand
+  }
+
+  private func handleGiveCommand(command: String) -> String {
+    if command.lowercased().starts(with: "give ") && command.contains(" to ") {
+      return command.replacingOccurrences(of: " to ", with: " on ")
     }
     return command
   }
+
 
   func parse(input: String) -> (Command?, [String]) {
     let command = resolveAlias(input).lowercased()
